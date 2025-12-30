@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { TreatmentsService } from '../../../_services/treatments.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MainService } from './../../../_services/main.service';
 
 @Component({
@@ -20,7 +20,8 @@ export class TreatmentTemplateComponent implements OnInit {
     private treatmentsService: TreatmentsService,
     private toastR: ToastrService,
     private activeRoute: ActivatedRoute,
-    private mainService: MainService
+    private mainService: MainService,
+    private router: Router
   ) { }
 
   model: any = [];
@@ -93,6 +94,12 @@ export class TreatmentTemplateComponent implements OnInit {
       let res: any = await firstValueFrom(this.treatmentsService.saveTreatmentTemplate(model));
       if (res.status == 0) {
         this.toastR.success('با موفقیت ثبت شد!');
+        if (this.editOrNewTemplate == -1) {
+          this.editOrNewTemplate = res.data
+          this.router.navigate(['/treatment-template/' + this.editOrNewTemplate]);
+          this.getTreatmentTemplate();
+          this.getSections();
+        }
       } else {
         this.toastR.error('خطایی رخ داده است');
       }
@@ -102,7 +109,11 @@ export class TreatmentTemplateComponent implements OnInit {
   }
 
   async getSections() {
-    let res: any = await firstValueFrom(this.mainService.getSections());
+    let model = {
+      // "id": this.editOrNewTemplate
+      "id": null
+    }
+    let res: any = await firstValueFrom(this.mainService.getSections(model));
     this.sectionsList = res;
   }
 
@@ -120,6 +131,7 @@ export class TreatmentTemplateComponent implements OnInit {
       let res: any = await firstValueFrom(this.mainService.saveSection(model));
       if (res.status == 0) {
         this.toastR.success('با موفقیت ثبت شد!');
+        this.getSections();
       } else {
         this.toastR.error('خطایی رخ داده است');
       }

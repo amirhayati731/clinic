@@ -41,6 +41,9 @@
             </label>
           </div>
         </div>
+        <div class="col-12 text-center mt-3 mb-3">
+          <button type="submit" class="btn btn-danger" (click)="saveSection()">ذخیره گروه</button>
+        </div>
 
         <div *ngIf="!showNewQuestionBox && editOrNewSection != -1" class="col-12 my-3">
           <button class="btn btn-lg btn-outline-secondary" (click)="addNewQuestion()">سوال جدید</button>
@@ -78,6 +81,4 @@
       <button type="submit" class="btn btn-danger" (click)="saveTreatmentTemplate()">ذخیره قالب</button>
     </div>
   </form>
-
-
 </div>
